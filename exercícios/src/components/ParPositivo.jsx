@@ -13,9 +13,20 @@ function ParPositivo() {
 
       setResultado('O número é par e positivo')
 
-     }else if(Number(Numero.value))
+     }else if(Number(Numero.value)%2 == 0 && Number(Numero.value)<=0){
+ 
+      setResultado('O número é par e negativo')
+
+       }else if(Number(Numero.value)%2 != 0 && Number(Numero.value)<=0){
+
+      setResultado('O número é ímpar e negativo')
+
+      }else if(Number(Numero.value)%2 != 0 && Number(Numero.value)>=0){
+ 
+      setResultado('O número é ímpar e positivo')
 
     }
+  }
 
   return (
     <>
