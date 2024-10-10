@@ -3,6 +3,7 @@ import { Children, createContext, useState } from "react";
 export const GlobalContext = createContext()
 
 export const GlobalContextProvider = ({children})=> {
+  
 
 
     return(
@@ -15,3 +16,4 @@ export const GlobalContextProvider = ({children})=> {
 
     )
 }
+
