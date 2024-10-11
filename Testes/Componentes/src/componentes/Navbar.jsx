@@ -6,11 +6,23 @@ import {useEffect, useState} from 'react'
 function Navbar() {
 
   const [Logado, setLogado] = useState(false)
+  const [UserLogado, setUserLogado] = useState()
 
 
   useEffect(() => {
 
+   setUserLogado(localStorage.getItem('User'))
 
+   if(UserLogado == '' || UserLogado == null){
+
+    alert('Usuario não cadastrado')
+
+   }else{
+
+    alert('User cadastrado')
+   return
+
+   }
  
 
   }, [])
