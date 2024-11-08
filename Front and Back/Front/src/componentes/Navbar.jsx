@@ -10,6 +10,7 @@ function Navbar() {
 
                 <Link to='/'>Home</Link>
                 <Link to='/usuarios'>Usuários</Link>
+                <Link to='/loginusuario'>Login</Link>
                 
 
           

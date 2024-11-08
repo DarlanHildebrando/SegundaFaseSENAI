@@ -4,7 +4,7 @@ import Navbar from '../componentes/Navbar'
 
 function Home() {
 
- const [Form, setForm] = useState({ Nome: '', Email: '', Senha: '', Endereco: '', CPF: '' })
+ const [Form, setForm] = useState({ Nome: '', Email: '', Senha: ''})
 
  const handleSubmit = async (e) => {
 
@@ -25,7 +25,7 @@ function Home() {
 
     if(response.ok){
 
-        setForm({Nome: '', Email: '', Senha: '', Endereco: '', CPF: '' })
+        setForm({Nome: '', Email: '', Senha: '' })
 
     }
 
@@ -81,10 +81,10 @@ function Home() {
 
     <br /><br />
 
-    <label htmlFor="">Endereço:</label>
+   {/** <label htmlFor="">Endereço:</label>
 
 <br />
-
+  
 <input 
     type="" 
     value={Form.Endereco}
@@ -108,7 +108,7 @@ function Home() {
     />
 
     <br /><br />
-
+*/}
 
     
 

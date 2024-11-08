@@ -67,7 +67,7 @@ function Usuarios() {
           {User.map((users) => (
             <li key={users.id}>
               <h4>
-               Nome: {users.nome} - {users.email}
+               Nome: {users.nome} - {users.email} - {users.senha}
               </h4>
             </li>
           ))}

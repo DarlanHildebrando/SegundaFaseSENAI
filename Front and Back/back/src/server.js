@@ -1,12 +1,19 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+require('dotenv').config();
+const SECRET_KEY = process.env.SECRET_KEY
+
+
 
 const app = express();
 const pool = new Pool({
     user: 'postgres', // Substitua pelo seu usuário do PostgreSQL
     host: 'localhost',
-    database: 'InkluaTicket', // Nome da sua database
+    database: 'Teste', // Nome da sua database
     password: 'postgre@33', // Substitua pela sua senha
     port: 5432, // Porta padrão do PostgreSQL
 });
@@ -16,16 +23,21 @@ const pool = new Pool({
 app.use(cors());
 app.use(express.json());
 
+
+//Adicionar um usuário ao banco de dados
 app.post('/usuarios', async (req, res) => {
 
-    const {Nome, Email, Senha, Endereco, CPF} = req.body;
+    const {Nome, Email, Senha} = req.body;
+
+    const salt = await bcrypt.genSalt(10);
+    const HashedPassword = await bcrypt.hash(Senha, salt);
 
     try{
 
         const result = await pool.query(
 
-            'INSERT INTO usuarios (nome, email, senha, endereco, cpf) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [Nome, Email, Senha, Endereco, CPF]
+            'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3) RETURNING *',
+            [Nome, Email, HashedPassword]
 
         );
 
@@ -40,6 +52,7 @@ app.post('/usuarios', async (req, res) => {
     }
 });
 
+//Buscar todos os usuários
 app.get('/usuarios', async (req, res) => {
 
    
@@ -88,6 +101,51 @@ app.get('/usuarios/:id', async (req, res) => {
     }
 
 });
+
+
+app.post('/login', async(req, res) => {
+
+    const {Email, Senha} = req.body;
+
+    try{
+
+        const result = await pool.query(
+
+            'SELECT * FROM usuarios WHERE email = $1', [Email]);
+
+        if(result.rows=== 0){
+
+            return res.status(400).json({message: 'Usuário não encontrado'})
+    }
+
+    const user = result.rows[0]
+
+    const isPassword = await bcrypt.compare(Senha, user.senha)
+
+    if(!isPassword){
+
+        return res.status(401).json({message: 'Senha incorreta!'})
+
+    }
+
+    const token = jwt.sign({id: user.id, email: user.email}, SECRET_KEY, {expiresIn: '1hr'})
+
+    res.json({message: 'Login bem sucedido!', token})
+
+} catch (err){
+
+    console.error(err.message)
+    res.status(500).json({message: 'Erro ao efetuar login!', error: err.message})
+
+}
+
+
+});
+
+    
+
+
+
 
 
 app.listen(3000, () => {
