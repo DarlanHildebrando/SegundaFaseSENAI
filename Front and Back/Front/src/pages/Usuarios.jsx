@@ -3,36 +3,26 @@ import Navbar from '../componentes/Navbar'
 
 function Usuarios() {
 
-  const [User, setUser] = useState([])
+  const [User, setUser] = useState('')
   const [Mostrar, setMostrar] = useState(false)
+  const token = localStorage.getItem('token')
 
 
   const Renderizar = async () => {
 
     try {
-      const response = await fetch('http://localhost:3000/usuarios/', {
+      const response = await fetch('http://localhost:3000/perfil', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`,
+          'Content-type': 'application/json'
         }
       });
 
-      if (!response.ok) {
+      if (response.ok) {
 
-        throw new Error('Erro ao buscar usuario')
-
-
-      }
-
-      const data = await response.json();
-      setUser(data);
-
-      if(data.lenght > 0){
-
-      setMostrar(false)
-
-      }else{
-
+        const userData = await response.json();
+        setUser(userData)
         setMostrar(true)
 
       }
@@ -50,7 +40,7 @@ function Usuarios() {
 
   useEffect(() => {
 
-    Renderizar();
+    Renderizar()
 
   }, [])
 
@@ -62,19 +52,18 @@ function Usuarios() {
       <Navbar />
 
 
-      {Mostrar ? (
-        <ul>
-          {User.map((users) => (
-            <li key={users.id}>
-              <h4>
-               Nome: {users.nome} - {users.email} - {users.senha}
-              </h4>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <h1>Nada aqui!</h1>
-      )}
+    
+      <h4>
+        Nome Usuário logado: {User.nome} <br /> <br />  
+        Email Usuário logado: {User.email} <br /> <br />
+        Senha Hasheada: {User.senha}
+       </h4> 
+   
+
+        
+    
+
+      
 
 
 

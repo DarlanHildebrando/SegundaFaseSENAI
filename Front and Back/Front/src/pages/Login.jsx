@@ -13,7 +13,7 @@ function Login() {
 
         try{
 
-            const response = await fetch(`http://localhost:3000/login`, {
+            const response = await fetch('http://localhost:3000/login', {
 
                 method: 'POST',
                 headers: {'Content-type':'application/json'},
@@ -24,14 +24,14 @@ function Login() {
 
             
 
-            const data = await response.json();
+            
 
             if(!response.ok){
 
                 setMensagem("Erro ao efetuar login!")
 
             }else{
-
+                const data = await response.json();
                 setMensagem("Login bem sucedido!")
                 localStorage.setItem('token', data.token)
 

@@ -20,7 +20,11 @@ const pool = new Pool({
 
 
 // Habilitar CORS para todas as rotas
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // A URL do seu frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
 
 
@@ -113,7 +117,7 @@ app.post('/login', async(req, res) => {
 
             'SELECT * FROM usuarios WHERE email = $1', [Email]);
 
-        if(result.rows=== 0){
+        if(result.rows.length === 0){
 
             return res.status(400).json({message: 'Usuário não encontrado'})
     }
@@ -132,6 +136,8 @@ app.post('/login', async(req, res) => {
 
     res.json({message: 'Login bem sucedido!', token})
 
+    
+
 } catch (err){
 
     console.error(err.message)
@@ -139,6 +145,61 @@ app.post('/login', async(req, res) => {
 
 }
 
+
+});
+
+const AutenticaçãoDeToken = (req, res, next) => {
+
+    const token = req.headers['authorization']?.split(' ')[1];
+
+    
+
+    if (!token) {
+
+        return res.status(401).json({ message: 'Token ausente!' });
+
+    }else{
+
+        jwt.verify(token, SECRET_KEY, (err, user) => {
+
+            if(err){
+                return res.status(403).json({ message: 'Token inválido!' })
+            }
+
+            req.user = user
+
+            next();
+
+        })
+
+    }
+};
+
+app.get('/perfil', AutenticaçãoDeToken, async (req, res) => {
+
+    const userId = req.user.id
+
+    try{
+    const result = await pool.query(
+
+        'SELECT * FROM usuarios WHERE id = $1', [userId]
+
+    );
+
+    if(result.rows.length === 0){
+
+        return res.status(404).json({message: 'Usuário não encontardo!'})
+
+    }
+
+    res.json(result.rows[0]);
+
+} catch( err ){
+
+console.error(err.message)
+return res.status(401).json({message: 'Usuário ', error: err.message})
+
+}
 
 });
 
