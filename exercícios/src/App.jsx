@@ -5,6 +5,7 @@ import PositivoOuNegativo from './components/PositivoOuNegativo'
 import ParPositivo from './components/ParPositivo'
 import Empréstimo from './components/Empréstimo'
 import StarUber from './components/StarUber'
+import Searchbar from './components/Searchbar'
 
 function App() {
  
@@ -12,8 +13,7 @@ function App() {
   return (
     <>
 
-    <StarUber/>
-   
+   <Searchbar/>
   
 
     </>
